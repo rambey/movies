@@ -29,9 +29,13 @@ class CallApiService
             if ($filter != null) {
                 $filters .= '&with_genres='.$filter ;
             }
-            $response = $this->client->request(
+            $languages = '';
+            if ($language != null) {
+                $languages .= '&language='.$language ;
+            }
+           $response = $this->client->request(
                 'GET',
-                'https://api.themoviedb.org/3/'.$vars.'?api_key='.$apikey.$pages.'&'.'language='.$language.$filters,[
+                'https://api.themoviedb.org/3/'.$vars.'?api_key='.$apikey.$pages.$languages.$filters,[
                     'auth_bearer' => $token ,
                 ]
             );

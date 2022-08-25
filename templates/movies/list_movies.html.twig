@@ -30,24 +30,66 @@
                             </div>
                         {% endfor %}
                     </div>
+                    <div class="filtered-films">
+
+                    </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center">
-                <ul class="pagination">
-                    <li class="page-item {% if page ==1 %}disabled{% endif %}">
-                        <a class="page-link" href="{{ path('app_movies_index' , {'page' : page - 1}) }}">&laquo;</a>
-                    </li>
-                    {% for i in 0..pages %}
-                        <li class="page-item {% if page == i %}active {% endif %}">
-                            <a class="page-link" href="{{ path('app_movies_index' , {'page' : i}) }}">{{ i }}</a>
-                        </li>
-                    {% endfor %}
-                    <li class="page-item  {% if page == pages %}disabled{% endif %}">
-                        <a class="page-link" href="{{ path('app_movies_index' , {'page' : page + 1 }) }}">&raquo;</a>
-                    </li>
-                </ul>
-            </div>
+            {% include 'partials/pagination.html.twig' %}
         </div>
     </div>
 
+{% endblock %}
+{% block javascripts %}
+    <!-- Page Scripts -->
+    <script>
+        const host = '{{ app.request.getSchemeAndHttpHost() }}';
+        $(document).ready(function(){
+            let categories = [];
+            $(".form-check-input").change(function() {
+                if(this.checked) {
+                    categories.push($(this).val());
+                }else{
+                    const index = categories.indexOf($(this).val());
+                    if (index > -1) {
+                        categories.splice(index, 1);
+                    }
+                }
+                getMoviesByCategories(categories);
+            });
+            function getMoviesByCategories(ids) {
+                url = "/movies/filter";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: { "ids": JSON.stringify(ids)},
+                    success: function (data) {
+                        let filteredMovies  = data.results;
+                        let  _html = '';
+                        for(var k in filteredMovies) {
+                            //console.log(k, filteredMovies[k]);
+                            let  film = filteredMovies[k];
+                            _html+= '<div class="film">'+
+                                '<div class="image">'+
+                                '<img src="https://image.tmdb.org/t/p/w92/'+film.poster_path+'">'+
+                                '</div>'+
+                            '<div class="content">'+
+                                '<p class="title">'+film.original_title+'<span class="rating">****</span> <span class="vote">('+film.vote_count +')</span>'+
+                                '</p>'+
+                                '<p class="published-date">'+film.release_date+'<span class="author">-Rami bellili</span></p>'+
+                                '<p class="short-description">'+ film.overview+'</p>'+
+                                '<span id="more">read more </span>'+
+                            '</div>'+
+                        '</div>'
+
+                        }
+                        $('.films').html(_html);
+                    },
+                    error: function (e) {
+                    }
+                });
+            }
+        });
+    </script>
+    <!-- End Page Scripts -->
 {% endblock %}

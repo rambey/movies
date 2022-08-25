@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Service\CallApiService;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,7 +70,7 @@ class MovieController extends AbstractController
      * @return array
      */
     private function getTopMovies($page): array{
-        $vars = 'movie/top_rated';
+        $vars = 'discover/movie';
         $language = 'en-US';
         return $this->callApiService->getApi($vars,$language,null,(int)$page);
     }
@@ -92,15 +93,21 @@ class MovieController extends AbstractController
 
     /**
      * get details for a specific movie
-     * @Route("/movies/filter", name="app_movie_filter", methods={"GET"})
-     * @return Response
+     * @Route("/movies/filter", name="app_movie_filter", methods={"POST"})
      */
-    public function getMoviesByCategories(): Response{
+    public function getMoviesByCategories(Request $request): Response{
         //https://api.themoviedb.org/3/discover/movie?api_key=e81c6c67ee604f117f04f5b39775f2ec&with_genres=36,14
         $vars = 'discover/movie';
         $language = 'en-US';
-        $filter = '36,14';
+        $ids = $request->request->all();
+        $chossenIds = json_decode($ids['ids']);
+        $filter = '';
+        foreach ($chossenIds as $id){
+            $filter.=$id.',';
+        }
+        $filter = substr_replace($filter ,"", -1);
+        //$filter = '36,14';
         $movies= $this->callApiService->getApi($vars,$language,$filter);
-        dd($movies);
+        return $this->json($movies);
     }
 }
