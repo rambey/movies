@@ -16,14 +16,22 @@ class CallApiService
         $this->params = $params;
     }
 
-    public function getApi($vars,$language,$filter=null): array
+    public function getApi($vars,$language,$filter=null, $page=null): array
     {
         $token = $this->params->get('token');
         $apikey = $this->params->get('api_key');
         try {
+            $pages = '';
+            if ($page != null) {
+                $pages .= '&page='.$page ;
+            }
+            $filters = '';
+            if ($filter != null) {
+                $filters .= '&with_genres='.$filter ;
+            }
             $response = $this->client->request(
                 'GET',
-                'https://api.themoviedb.org/3/'.$vars.'?api_key='.$apikey.'&'.'language='.$language.'&with_genres='.$filter,[
+                'https://api.themoviedb.org/3/'.$vars.'?api_key='.$apikey.$pages.'&'.'language='.$language.$filters,[
                     'auth_bearer' => $token ,
                 ]
             );
