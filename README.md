@@ -19,7 +19,7 @@
     ###< api_tmdb> ###
     
 # Fonctionalities
-   get  movies with pagination with details ( rating , infromations ...) 
-   filter movies by categories
+    get  movies with pagination with details ( rating , infromations ...) 
+    filter movies by categories
    
    
