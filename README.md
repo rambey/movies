@@ -11,7 +11,7 @@
     composer install
     npm install && npm run build
   
-# Configuration API KEY && Bearer Authorization 
+# Configuration API KEY AND Bearer Authorization 
     ###> api_tmdb ###
         TMDB_API_KEY=Your Api key        
         TMDB_BEARER_TOKEN=BearerToken
