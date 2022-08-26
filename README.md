@@ -12,8 +12,8 @@
     npm install && npm run build
   
 # Configuration API KEY AND Bearer Authorization 
+MODIFY TMDB_API_KEY and  TMDB_BEARER_TOKEN  in .env file
     ###> api_tmdb ###
         TMDB_API_KEY=Your Api key        
         TMDB_BEARER_TOKEN=BearerToken
-    
-###< api_tmdb> ###
+    ###< api_tmdb> ###
