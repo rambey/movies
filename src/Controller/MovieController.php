@@ -29,9 +29,6 @@ class MovieController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        /*$vars = 'movie/550/lists';
-        $language = 'en-US';
-        $allMovies = $this->callApiService->getApi($vars,$language);*/
         $page = $request->query->get('page');
         return $this->render('movies/list_movies.html.twig', [
             'categories' => $this->getCategories(),
@@ -96,7 +93,6 @@ class MovieController extends AbstractController
      * @Route("/movies/filter", name="app_movie_filter", methods={"POST"})
      */
     public function getMoviesByCategories(Request $request): Response{
-        //https://api.themoviedb.org/3/discover/movie?api_key=e81c6c67ee604f117f04f5b39775f2ec&with_genres=36,14
         $vars = 'discover/movie';
         $language = 'en-US';
         $ids = $request->request->all();
@@ -115,14 +111,11 @@ class MovieController extends AbstractController
      * @Route("/movies/query", name="app_movie_query", methods={"POST"})
      */
     public function getMoviesByQuery(Request $request): Response{
-        //https://api.themoviedb.org/3/search/movie?api_key=e81c6c67ee604f117f04f5b39775f2ec&query=Thor: Love
         $vars = 'discover/movie';
         $language = 'en-US';
         $ids = $request->request->all();
-
         $filter = 'hor: Love';
         $movies= $this->callApiService->getApi($vars,$language,$filter);
         return $this->json($movies);
     }
-
 }
