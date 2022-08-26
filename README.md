@@ -1,0 +1,19 @@
+
+# MOVIES TMDB API
+
+# Requirements
+   PHP 7.4,
+   Composer,
+   NPM or Yarn 
+ # Installation
+    git clone git@github.com:rambey/movies.git
+    cd movies
+    composer install
+    npm install && npm run build
+  
+# Configuration API KEY && Bearer Authorization 
+    ###> api_tmdb ###
+        TMDB_API_KEY=Your Api key        
+        TMDB_BEARER_TOKEN=BearerToken
+    
+###< api_tmdb> ###
