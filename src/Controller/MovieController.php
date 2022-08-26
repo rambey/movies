@@ -92,7 +92,7 @@ class MovieController extends AbstractController
     }
 
     /**
-     * get details for a specific movie
+     * get movies by categories
      * @Route("/movies/filter", name="app_movie_filter", methods={"POST"})
      */
     public function getMoviesByCategories(Request $request): Response{
@@ -106,8 +106,23 @@ class MovieController extends AbstractController
             $filter.=$id.',';
         }
         $filter = substr_replace($filter ,"", -1);
-        //$filter = '36,14';
         $movies= $this->callApiService->getApi($vars,$language,$filter);
         return $this->json($movies);
     }
+
+    /**
+     * get details for a specific movie
+     * @Route("/movies/query", name="app_movie_query", methods={"POST"})
+     */
+    public function getMoviesByQuery(Request $request): Response{
+        //https://api.themoviedb.org/3/search/movie?api_key=e81c6c67ee604f117f04f5b39775f2ec&query=Thor: Love
+        $vars = 'discover/movie';
+        $language = 'en-US';
+        $ids = $request->request->all();
+
+        $filter = 'hor: Love';
+        $movies= $this->callApiService->getApi($vars,$language,$filter);
+        return $this->json($movies);
+    }
+
 }

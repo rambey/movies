@@ -14,23 +14,28 @@
                 <div class="col-md-8">
                     <div class="films">
                         {% for movie in popularMovies.results %}
-                            <div class="film">
+                            <div class="film" name="{{ movie.id }}" data-id="{{ movie.id }}">
                                     <div class="image">
-                                        <img src="https://image.tmdb.org/t/p/w92/{{ movie.poster_path }}">
+                                        <img src="https://image.tmdb.org/t/p/w92/{{ movie.poster_path }}" >
                                     </div>
                                     <div class="content">
-                                        <p class="title">{{ movie.original_title }}<span class="rating">****</span> <span class="vote">({{ movie.vote_count }})</span>
+                                        <p class="title">
+                                            {{ movie.original_title }}
+                                            ( {%  include 'partials/rating.html.twig'  with {'rating': movie.vote_count } %} )
+                                             <span class="vote">({{ movie.vote_count }} votes)</span>
                                         </p>
-                                        <p class="published-date">{{ movie.release_date|date("d-m-Y") }}<span class="author">-Rami bellili</span></p>
+                                        <p class="published-date">{{ movie.release_date|date("Y") }}<span class="text-primary">-Disney Pixar</span></p>
                                         <p class="short-description">
-                                            {{ movie.overview }}
+                                            {{ movie.overview|slice(1,150) }}
+                                            <span class="dots">...</span>
+                                            <span class="more-content" style="display: none;">
+                                                  {{ movie.overview|slice(151) }}
+                                            </span>
                                         </p>
-                                        <span id="more">read more </span>
+                                        <span class="more" onclick="showMore({{ movie.id }})">Lire le détails</span>
                                     </div>
                             </div>
                         {% endfor %}
-                    </div>
-                    <div class="filtered-films">
 
                     </div>
                 </div>
@@ -43,8 +48,8 @@
 {% block javascripts %}
     <!-- Page Scripts -->
     <script>
-        const host = '{{ app.request.getSchemeAndHttpHost() }}';
         $(document).ready(function(){
+            /** ajax filter movies by categories **/
             let categories = [];
             $(".form-check-input").change(function() {
                 if(this.checked) {
@@ -67,18 +72,18 @@
                         let filteredMovies  = data.results;
                         let  _html = '';
                         for(var k in filteredMovies) {
-                            //console.log(k, filteredMovies[k]);
                             let  film = filteredMovies[k];
-                            _html+= '<div class="film">'+
+                            var releaseDate = new Date(film.release_date);
+                            _html+= '<div class="film" data-id="'+film.id +'">'+
                                 '<div class="image">'+
                                 '<img src="https://image.tmdb.org/t/p/w92/'+film.poster_path+'">'+
                                 '</div>'+
                             '<div class="content">'+
-                                '<p class="title">'+film.original_title+'<span class="rating">****</span> <span class="vote">('+film.vote_count +')</span>'+
+                                '<p class="title">'+film.original_title+'<span class="rating">('+film.vote_count+')</span> <span class="vote">('+film.vote_count +' votes)</span>'+
                                 '</p>'+
-                                '<p class="published-date">'+film.release_date+'<span class="author">-Rami bellili</span></p>'+
+                                '<p class="published-date">'+releaseDate.getFullYear()+'<span class="text-primary">-Disney Pixar</span></p>'+
                                 '<p class="short-description">'+ film.overview+'</p>'+
-                                '<span id="more">read more </span>'+
+                                '<span class="more" onclick="showMore('+film.id+')">Lire le détails</span>'+
                             '</div>'+
                         '</div>'
 
@@ -90,6 +95,22 @@
                 });
             }
         });
+
+        /** show more movie description text **/
+        function showMore(id) {
+            var dots =$("[data-id='" + id + "'] .dots");
+            var moreText = $("[data-id='" + id + "'] .more-content");
+            var btnText = $("[data-id='" + id + "'] .more");
+            if (dots.hasClass('hidden')) {
+                dots.removeClass('hidden').addClass('visible');
+                btnText.text("Lire le détails");
+                moreText.addClass('hidden').removeClass('visible');
+            } else {
+                dots.removeClass('visible').addClass('hidden');
+                btnText.text("Lire moins");
+                moreText.addClass('visible').removeClass('hidden');
+            }
+        }
     </script>
     <!-- End Page Scripts -->
 {% endblock %}

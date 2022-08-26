@@ -16,14 +16,19 @@ class CallApiService
         $this->params = $params;
     }
 
-    public function getApi($vars,$language,$filter=null, $page=null): array
+    public function getApi($vars,$language,$filter=null,$query=null,$page=null): array
     {
-        $token = $this->params->get('token');
-        $apikey = $this->params->get('api_key');
+        $apikey = $_ENV['TMDB_API_KEY'];
+        $token = $_ENV['TMDB_BEARER_TOKEN'];
+
         try {
             $pages = '';
             if ($page != null) {
                 $pages .= '&page='.$page ;
+            }
+            $queries = '';
+            if ($query != null) {
+                $queries .= '&query='.$query ;
             }
             $filters = '';
             if ($filter != null) {
@@ -42,9 +47,6 @@ class CallApiService
         } catch (\Exception $e) {
             echo $e->getMessage();
         }
-        $statusCode = $response->getStatusCode();
-        $contentType = $response->getHeaders()['content-type'][0];
-        $content = $response->getContent();
         $content = $response->toArray();
         return $content;
     }
