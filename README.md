@@ -17,3 +17,9 @@
         TMDB_API_KEY=Your Api key        
         TMDB_BEARER_TOKEN=BearerToken
     ###< api_tmdb> ###
+    
+# Fonctionalities
+   get  movies with pagination with details ( rating , infromations ...) 
+   filter movies by categories
+   
+   
